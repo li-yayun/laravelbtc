@@ -7,8 +7,6 @@ use App\Service\HttpService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Tymon\JWTAuth\JWTAuth;
 
 class LoginController extends Controller
 {
@@ -22,14 +20,21 @@ class LoginController extends Controller
         try {
             $condition = \request(['tel','password']);
             $token     = auth('api')->attempt($condition);
-            HttpService::setSuccess([
+            return HttpService::setSuccess([
                 'access_token'  => $token,
                 'token_type'    => 'Bearer',
                 'expires_in'    => auth('api')->factory()->getTTL() * 60
             ])->Response();
         }catch (\Throwable $e){
-            HttpService::setFailed([],'登录失败')->Response();
+            return HttpService::setFailed('登录失败')->Response();
         }
+    }
+
+    /**
+     * 发送验证码接口
+     */
+    public function sendVerifyCode(Request $request){
+
     }
 
     /**
@@ -46,13 +51,15 @@ class LoginController extends Controller
     /**
      * 获取当前登录信息
      * @param Request $request
+     * @return JsonResponse
      */
-    public function getUserDetail(Request $request){
+    public function getUserDetail(Request $request): JsonResponse
+    {
         try {
             $user = Auth::user();
-            HttpService::setSuccess(json_decode(json_encode($user),1))->Response();
+            return HttpService::setSuccess($user)->Response();
         }catch (\Throwable $e){
-            HttpService::setFailed()->Response();
+            return HttpService::setFailed()->Response();
         }
     }
 }

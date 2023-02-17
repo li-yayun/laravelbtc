@@ -55,6 +55,9 @@ class HttpService
      */
     public static function setSuccess( $data=[], int $code=0, string $message='成功'): ?HttpService
     {
+        if(is_object($data)){
+            $data = json_decode(json_encode($data),1);
+        }
         $sign = self::getInterface();
         $sign->data = $data;
         $sign->message = $message;
