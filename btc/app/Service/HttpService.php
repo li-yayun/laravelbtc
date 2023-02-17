@@ -3,7 +3,11 @@
 
 namespace App\Service;
 
-
+/**
+ * 接口统一返回封装
+ * Class HttpService
+ * @package App\Service
+ */
 class HttpService
 {
     /**
