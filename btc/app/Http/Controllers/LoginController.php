@@ -13,7 +13,12 @@ use Tymon\JWTAuth\JWTAuth;
 class LoginController extends Controller
 {
 
-    public function loginByJwt(Request $request): \Illuminate\Http\JsonResponse
+    /**
+     * 登录接口
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function loginJwt(Request $request): \Illuminate\Http\JsonResponse
     {
         $condition = \request(['tel','password']);
         $token = auth('api')->attempt($condition);
@@ -24,6 +29,12 @@ class LoginController extends Controller
         ]);
     }
 
+    /**
+     * 注册接口
+     */
+    public function register(){
+
+    }
 
     public function getUserDetail(Request $request){
         $user = Auth::user();
