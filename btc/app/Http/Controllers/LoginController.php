@@ -22,15 +22,14 @@ class LoginController extends Controller
         try {
             $condition = \request(['tel','password']);
             $token     = auth('api')->attempt($condition);
-            $http = HttpService::setSuccess([
-                'access_token' => $token,
-                'token_type' => 'Bearer',
-                'expires_in' => auth('api')->factory()->getTTL() * 60
-            ]);
+            HttpService::setSuccess([
+                'access_token'  => $token,
+                'token_type'    => 'Bearer',
+                'expires_in'    => auth('api')->factory()->getTTL() * 60
+            ])->Response();
         }catch (\Throwable $e){
-            $http = HttpService::setFailed([],'登录失败');
+            HttpService::setFailed([],'登录失败')->Response();
         }
-        return $http->Response();
     }
 
     /**
@@ -44,8 +43,16 @@ class LoginController extends Controller
         }
     }
 
+    /**
+     * 获取当前登录信息
+     * @param Request $request
+     */
     public function getUserDetail(Request $request){
-        $user = Auth::user();
-        dd($user);
+        try {
+            $user = Auth::user();
+            HttpService::setSuccess(json_decode(json_encode($user),1))->Response();
+        }catch (\Throwable $e){
+            HttpService::setFailed()->Response();
+        }
     }
 }
